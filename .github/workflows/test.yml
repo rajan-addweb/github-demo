@@ -1,33 +1,20 @@
-name: demo github actions
+name: Clone Repository on Remote Server
+
 on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
+
 jobs:
-  build:
+  clone_repository:
     runs-on: ubuntu-latest
-    steps: 
-      - uses: actions/checkout@v3
-      - name: Install SSH keys
-        run: |
-          install -m 600 -D /dev/null ~/.ssh/new
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/new
-          ssh-keyscan -H "${{ secrets.SSH_HOST }}" > ~/.ssh/known_hosts
-      - name: copy key
-        run: |
-          install -m 600 -D /dev/null ~/.ssh/id_rsa
-          echo "${{ secrets.SSH_NEW_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          # ssh-keyscan -H "${{ secrets.SSH_HOST }}" > ~/.ssh/known_hosts
-      - name: ssh connect and clone
-        run: |
-          ssh "${{ secrets.SSH_USER }}"@"${{ secrets.SSH_HOST }}" << EOF
-          echo ----- take clone in remote server -----
-          git clone git@github.com:rajan-addweb/github-demo.git
-          exit
-          EOF
-      - name: cleanup
-        run: | 
-          rm -rf ~/.ssh/new
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up SSH keys
+      run: echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+
+    - name: Clone repository
+      run: ssh-agent bash -c 'ssh-add ~/.ssh/id_rsa && git@github.com:rajan-addweb/github-demo.git'
