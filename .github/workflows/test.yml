@@ -16,13 +16,15 @@ jobs:
           install -m 600 -D /dev/null ~/.ssh/id_rsa
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           ssh-keyscan -H "${{ secrets.SSH_HOST }}" > ~/.ssh/known_hosts
-      - name: deploy to server
+      - name: copy key
         run: |
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no
+          install -m 600 -D /dev/null ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_NEW_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          ssh-keyscan -H "${{ secrets.SSH_HOST }}" > ~/.ssh/known_hosts
       - name: ssh connect and clone
         run: |
           ssh "${{ secrets.SSH_USER }}"@"${{ secrets.SSH_HOST }}" << EOF
-          echo ----- create Directory -----
+          echo ----- take clone in remote server -----
           git clone git@github.com:rajan-addweb/github-demo.git
           exit
           EOF
