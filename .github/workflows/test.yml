@@ -29,7 +29,7 @@ jobs:
           #exit
           #EOF
       - name: rsync a file in remote server
-        run: rsync -varzh -e ~/demofile "${{ secrets.SSH_USER }}"@"${{ secrets.SSH_HOST }}":/home/ubuntu/new/
+        run: rsync -avz --delete ~/demofile "${{ secrets.SSH_USER }}"@"${{ secrets.SSH_HOST }}":/home/ubuntu/new
       - name: cleanup
         run: | 
           rm -rf ~/.ssh/new	
