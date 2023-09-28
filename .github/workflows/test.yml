@@ -13,12 +13,22 @@ jobs:
       - uses: actions/checkout@v3
       - name: Install SSH keys
         run: |
+          install -m 600 -D /dev/null ~/.ssh/rajan
+          echo "${{ secrets.RAJAN_KEY }}" > ~/.ssh/rajan
+          ssh-keyscan -H "${{ secrets.SSH_HOST }}" > ~/.ssh/known_hosts
+      - name: copy private key for clone
+        run: |
           install -m 600 -D /dev/null ~/.ssh/id_rsa
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          ssh-keyscan -H "${{ secrets.SSH_HOST }}" > ~/.ssh/known_hosts
-        
-      - name: rsync a file in remote server
-        run: rsync -avz test "${{ secrets.SSH_USER }}"@"${{ secrets.SSH_HOST }}":/home/ubuntu/new
-      - name: cleanup
+      - name: connect and clone
         run: | 
-          rm -rf ~/.ssh/new	
+          ssh "${{ secrets.SSH_USER }}"@"${{ secrets.SSH_HOST }}" << EOF
+          echo ----- take clone in remote server -----
+          git clone git@github.com:rajan-addweb/github-demo.git
+          exit
+          EOF
+          #- name: rsync a file in remote server
+          #run: rsync -avz ./add "${{ secrets.SSH_USER }}"@"${{ secrets.SSH_HOST }}":/home/ubuntu/new
+          #- name: cleanup
+          #run: | 
+          #rm -rf ~/.ssh/new	
