@@ -13,8 +13,8 @@ jobs:
       - uses: actions/checkout@v3
       - name: Install SSH keys
         run: |
-          install -m 600 -D /dev/null ~/.ssh/rajan
-          echo "${{ secrets.RAJAN_KEY }}" > ~/.ssh/rajan
+          install -m 600 -D /dev/null ~/.ssh/id_rsa
+          echo "${{ secrets.RAJAN_KEY }}" > ~/.ssh/id_rsa
           ssh-keyscan -H "${{ secrets.SSH_HOST }}" > ~/.ssh/known_hosts
           #- name: copy private key for clone
           #run: |
