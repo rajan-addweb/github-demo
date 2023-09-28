@@ -18,7 +18,7 @@ jobs:
           ssh-keyscan -H "${{ secrets.SSH_HOST }}" > ~/.ssh/known_hosts
         
       - name: rsync a file in remote server
-        run: rsync -avz . "${{ secrets.SSH_USER }}"@"${{ secrets.SSH_HOST }}":/home/ubuntu/new
+        run: rsync -avz /home/addweb/github-demo/demofile "${{ secrets.SSH_USER }}"@"${{ secrets.SSH_HOST }}":/home/ubuntu/new
       - name: cleanup
         run: | 
           rm -rf ~/.ssh/new	
