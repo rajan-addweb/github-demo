@@ -30,6 +30,6 @@ jobs:
           EOF
           #- name: rsync a file in remote server
           #run: rsync -avz ./add "${{ secrets.SSH_USER }}"@"${{ secrets.SSH_HOST }}":/home/ubuntu/new
-          #- name: cleanup
-          #run: | 
-          #rm -rf ~/.ssh/new	
+      - name: cleanup
+        run: | 
+          rm -rf ~/.ssh	
